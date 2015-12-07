@@ -58,7 +58,6 @@ public:
     
     void createChomsky() {
         
-        
         int cont = 0;
         int cont2 = 0;
         int cont3 = 0;
@@ -73,9 +72,14 @@ public:
         std::map<std::string, std::vector<std::string>>::iterator it;
         it = productions.begin();
         
-        for (int i = 0; i < numProd; i++) {
-            for (auto j: it->second) {
-                if (j.length() == 1) {
+        
+        
+        for (int i = 0; i < numProd; i++)
+        {
+            for (auto j: it->second)
+            {
+                if (j.length() == 1)
+                {
                     
                     std::ostringstream oss;
                     oss << nuevaVar << cont;
@@ -90,13 +94,22 @@ public:
         }
         
         
-        for (auto &variable:productions) {
-            for (auto &terminal: variable.second) {
-                if (terminal.length() > 1) {
-                    for (int k = 0; k<terminal.length(); k++) {
-                        if (islower(terminal[k])) {
-                            for (auto l:newProductions) {
-                                if (terminal[k]==l.first[0]){
+        for (auto &variable:productions)
+        {
+            for (auto &terminal: variable.second)
+            {
+                if (terminal.length() > 1)
+                {
+                    for (int k = 0; k<terminal.length(); k++)
+                    {
+                        if (islower(terminal[k]))
+                        {
+                            bool found=false;
+                            for (auto l:newProductions)
+                            {
+                                if (terminal[k]==l.first[0])
+                                {
+                                    found = true;
                                     size_t pos = terminal.find(l.first[0]);
                                     if(pos != std::string::npos)
                                     {
@@ -106,6 +119,18 @@ public:
                                     }
                                 }
                             }
+                            if(!found)
+                            {
+                                std::ostringstream oss;
+                                oss << nuevaVar << cont++;
+                                addVar(oss.str());
+                                addProduction(oss.str(), terminal.substr(k,1));
+                                addNewProduction(oss.str(), terminal.substr(k,1));
+                                terminal.erase(terminal.begin()+k);
+                                terminal.insert(k, oss.str());
+
+                            }
+                            
                         }
                     }
                 }
@@ -264,6 +289,7 @@ public:
                 }
             }
         }
+        
         
         int i;
         for (i=0; i<var.size();i++)
